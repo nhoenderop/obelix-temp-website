@@ -1,0 +1,65 @@
+---
+import CornerCat from './CornerCat.astro';
+import { catAnimationConfig } from '../config/animations';
+---
+
+<div class="corner-cats">
+  <CornerCat corner="top-left" />
+  <CornerCat corner="top-right" />
+  <CornerCat corner="bottom-left" />
+  <CornerCat corner="bottom-right" />
+</div>
+
+<script>
+  import { catAnimationConfig } from '../config/animations';
+
+  function showRandomCat() {
+    const cats = document.querySelectorAll('.corner-cat');
+    const previousCat = document.querySelector('.corner-cat.show');
+    
+    if (previousCat) {
+      previousCat.classList.remove('show');
+      previousCat.classList.add('exit');
+      setTimeout(() => {
+        previousCat.classList.remove('exit');
+      }, catAnimationConfig.timing.animationDuration);
+    }
+
+    const availableCats = Array.from(cats).filter(cat => cat !== previousCat);
+    const randomIndex = Math.floor(Math.random() * availableCats.length);
+    const selectedCat = availableCats[randomIndex];
+    
+    // Show and animate the cat
+    selectedCat.classList.add('show');
+    
+    // Add wiggle animation after a short delay
+    setTimeout(() => {
+      selectedCat.classList.add('wiggle');
+    }, catAnimationConfig.timing.animationDuration);
+
+    // Remove wiggle and prepare for exit
+    setTimeout(() => {
+      selectedCat.classList.remove('wiggle');
+      selectedCat.classList.add('exit');
+      
+      // Remove all classes after exit animation
+      setTimeout(() => {
+        selectedCat.classList.remove('show', 'exit');
+      }, catAnimationConfig.timing.animationDuration);
+      
+    }, catAnimationConfig.timing.showDuration - catAnimationConfig.timing.animationDuration);
+  }
+
+  function scheduleNextCat() {
+    const { minDelay, maxDelay } = catAnimationConfig.timing;
+    const randomDelay = Math.floor(Math.random() * (maxDelay - minDelay + 1)) + minDelay;
+    
+    setTimeout(() => {
+      showRandomCat();
+      scheduleNextCat();
+    }, randomDelay);
+  }
+
+  // Start the cat appearances
+  scheduleNextCat();
+</script>

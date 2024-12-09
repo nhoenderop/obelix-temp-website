@@ -1,0 +1,65 @@
+---
+import Layout from '../layouts/Layout.astro';
+import OpeningHours from '../components/OpeningHours.astro';
+import SignUp from '../components/SignUp.astro';
+import Contact from '../components/Contact.astro';
+import LanguageSwitch from '../components/LanguageSwitch.astro';
+---
+
+<Layout title="Obelix">
+  <LanguageSwitch />
+  <main>
+    <header class="hero">
+      <h1>OBELIX</h1>
+      <p class="translate" data-translate="strength.through.dedication">Tijdelijke website. Groetjes van Norbert en liefs van Mauro.</p>
+    </header>
+    <OpeningHours />
+    <SignUp />
+    <Contact />
+  </main>
+</Layout>
+
+<script>
+  import { translations } from '../i18n/translations';
+
+  // Get the current language from localStorage or default to Dutch
+  const currentLang = localStorage.getItem('language') || 'nl';
+
+  // Update all translatable elements
+  document.querySelectorAll('.translate').forEach(element => {
+    const key = element.getAttribute('data-translate');
+    if (key && translations[currentLang][key]) {
+      element.textContent = translations[currentLang][key];
+    }
+  });
+</script>
+
+<style>
+  .hero {
+    background-color: #1a202c;
+    color: white;
+    text-align: center;
+    padding: 4rem 1rem;
+  }
+
+  h1 {
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+  }
+
+  p {
+    font-size: 1.25rem;
+    opacity: 0.9;
+  }
+
+  main {
+    min-height: 100vh;
+  }
+
+  @media (min-width: 640px) {
+    h1 {
+      font-size: 4rem;
+    }
+  }
+</style>

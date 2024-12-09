@@ -1,0 +1,158 @@
+---
+import { translations } from '../i18n/translations';
+
+const weekSchedule = [
+  { 
+    day: 'monday', 
+    hours: '8:00 - 20:30',
+    classes: []
+  },
+  { 
+    day: 'tuesday', 
+    hours: '8:00 - 20:30',
+    classes: [{
+      type: 'lessons.tuesday',
+      time: 'lessons.time'
+    }]
+  },
+  { 
+    day: 'wednesday', 
+    hours: '8:00 - 20:30',
+    classes: [{
+      type: 'lessons.wednesday',
+      time: 'lessons.time'
+    }]
+  },
+  { 
+    day: 'thursday', 
+    hours: '8:00 - 20:30',
+    classes: [{
+      type: 'lessons.thursday',
+      time: 'lessons.time'
+    }]
+  },
+  { 
+    day: 'friday', 
+    hours: '8:00 - 20:30',
+    classes: []
+  },
+  { 
+    day: 'saturday', 
+    hours: '12:00 - 16:00',
+    classes: []
+  },
+  { 
+    day: 'sunday', 
+    hours: '10:00 - 18:00',
+    classes: []
+  },
+];
+---
+
+<section class="opening-hours">
+  <h2 class="translate" data-translate="opening.hours">Openingstijden</h2>
+  <div class="schedule">
+    {weekSchedule.map(({ day, hours, classes }) => (
+      <div class={`schedule-row ${classes.length > 0 ? 'has-classes' : ''}`}>
+        <div class="day-info">
+          <span class="day translate" data-translate={day}>{translations.nl[day]}</span>
+          <span class="hours">{hours}</span>
+        </div>
+        {classes.length > 0 && (
+          <div class="classes">
+            {classes.map((classInfo) => (
+              <div class="class-info">
+                <span class="class-type translate" data-translate={classInfo.type}></span>
+                <span class="class-time translate" data-translate={classInfo.time}></span>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    ))}
+  </div>
+</section>
+
+<style>
+  .opening-hours {
+    padding: 2rem 1rem;
+    background-color: #f4f4f4;
+    border-radius: 8px;
+    margin: 1rem 0;
+  }
+
+  h2 {
+    color: #2d3748;
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+
+  .schedule {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .schedule-row {
+    padding: 0.75rem;
+    border-bottom: 1px solid #e2e8f0;
+  }
+
+  .schedule-row:last-child {
+    border-bottom: none;
+  }
+
+  .day-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .day {
+    font-weight: 600;
+    color: #4a5568;
+  }
+
+  .hours {
+    color: #718096;
+  }
+
+  .has-classes {
+    background-color: #edf2f7;
+    border-radius: 6px;
+    margin-bottom: 0.5rem;
+  }
+
+  .classes {
+    margin-top: 0.5rem;
+    padding-top: 0.5rem;
+    border-top: 1px dashed #cbd5e0;
+  }
+
+  .class-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.25rem 0.5rem;
+    background-color: white;
+    border-radius: 4px;
+    margin: 0.25rem 0;
+  }
+
+  .class-type {
+    color: #2d3748;
+    font-weight: 500;
+  }
+
+  .class-time {
+    color: #718096;
+    font-size: 0.875rem;
+  }
+
+  @media (max-width: 640px) {
+    .class-info {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.25rem;
+    }
+  }
+</style>

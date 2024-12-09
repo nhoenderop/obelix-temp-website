@@ -1,0 +1,79 @@
+---
+interface Props {
+  corner: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
+}
+
+const { corner } = Astro.props;
+
+const getRotation = (corner: string) => {
+  switch (corner) {
+    case 'top-left': return '135deg';
+    case 'top-right': return '-135deg';
+    case 'bottom-left': return '45deg';
+    case 'bottom-right': return '-45deg';
+    default: return '0deg';
+  }
+};
+---
+
+<div class={`corner-cat ${corner}`}>
+  <div class="cat" style={`--rotation: ${getRotation(corner)}`}><img src="/mauro.png" alt="🐱"></div>
+</div>
+
+<style>
+  .corner-cat {
+    position: fixed;
+    z-index: 1000;
+    opacity: 0;
+    font-size: 2rem;
+    pointer-events: none;
+  }
+
+  .cat {
+    transform: scale(0) rotate(var(--rotation));
+    transition: all var(--animation-duration, 300ms) cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .top-left {
+    top: 1rem;
+    left: 1rem;
+  }
+
+  .top-right {
+    top: 4rem;
+    right: 1rem;
+  }
+
+  .bottom-left {
+    bottom: 1rem;
+    left: 1rem;
+  }
+
+  .bottom-right {
+    bottom: 1rem;
+    right: 1rem;
+  }
+
+  .show {
+    opacity: 1;
+  }
+
+  .show .cat {
+    transform: scale(1) rotate(var(--rotation));
+  }
+
+  .wiggle .cat {
+    animation: wiggle 0.6s ease-in-out;
+  }
+
+  @keyframes wiggle {
+    0%, 100% { transform: scale(1) rotate(var(--rotation)); }
+    25% { transform: scale(1.1) rotate(calc(var(--rotation) + 10deg)) translateX(5px); }
+    50% { transform: scale(1.1) rotate(calc(var(--rotation) - 10deg)) translateX(-5px); }
+    75% { transform: scale(1.1) rotate(calc(var(--rotation) + 10deg)) translateX(5px); }
+  }
+
+  .exit .cat {
+    transform: scale(0) rotate(calc(var(--rotation) - 15deg));
+  }
+</style>
