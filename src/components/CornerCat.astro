@@ -27,10 +27,20 @@ const getRotation = (corner: string) => {
     opacity: 0;
     font-size: 2rem;
     pointer-events: none;
+    cursor: pointer;
   }
 
   .cat {
     transform: scale(0) rotate(var(--rotation));
+    transition: all var(--animation-duration, 300ms) cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .hat {
+    position: absolute;
+    top: -1rem;
+    left: 0.5rem;
+    font-size: 1.5rem;
+    transform: scale(0);
     transition: all var(--animation-duration, 300ms) cubic-bezier(0.4, 0, 0.2, 1);
   }
 
@@ -56,14 +66,49 @@ const getRotation = (corner: string) => {
 
   .show {
     opacity: 1;
+    pointer-events: auto;
   }
 
   .show .cat {
     transform: scale(1) rotate(var(--rotation));
   }
 
+  .show .hat {
+    transform: scale(1);
+  }
+
   .wiggle .cat {
     animation: wiggle 0.6s ease-in-out;
+  }
+
+  .wiggle .hat {
+    animation: wiggleHat 0.6s ease-in-out;
+  }
+
+  .fullscreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    cursor: pointer;
+  }
+
+  .fullscreen .cat {
+    font-size: 10rem;
+    animation: spin 3s linear infinite;
+  }
+
+  .fullscreen .hat {
+    font-size: 8rem;
+    top: -6rem;
+    left: 2rem;
+    animation: bounce 2s ease-in-out infinite;
   }
 
   @keyframes wiggle {
@@ -73,7 +118,28 @@ const getRotation = (corner: string) => {
     75% { transform: scale(1.1) rotate(calc(var(--rotation) + 10deg)) translateX(5px); }
   }
 
+  @keyframes wiggleHat {
+    0%, 100% { transform: scale(1); }
+    25% { transform: scale(1.1) translateY(-2px); }
+    50% { transform: scale(1.1) translateY(2px); }
+    75% { transform: scale(1.1) translateY(-2px); }
+  }
+
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+  }
+
   .exit .cat {
     transform: scale(0) rotate(calc(var(--rotation) - 15deg));
+  }
+
+  .exit .hat {
+    transform: scale(0);
   }
 </style>

@@ -1,9 +1,13 @@
 ---
 import CornerCat from './CornerCat.astro';
+import Snow from './Snow.astro';
+import ChristmasDecorations from './ChristmasDecorations.astro';
 import { catAnimationConfig } from '../config/animations';
 ---
 
 <div class="corner-cats">
+  <Snow count={100} />
+  <ChristmasDecorations />
   <CornerCat corner="top-left" />
   <CornerCat corner="top-right" />
   <CornerCat corner="bottom-left" />
@@ -13,7 +17,44 @@ import { catAnimationConfig } from '../config/animations';
 <script>
   import { catAnimationConfig } from '../config/animations';
 
+  let audio: HTMLAudioElement | null = null;
+  let activeFullscreenCat: HTMLElement | null = null;
+
+  function initAudio() {
+    audio = new Audio(catAnimationConfig.audio.url);
+    audio.volume = catAnimationConfig.audio.volume;
+  }
+
+  function playAudio() {
+    if (!audio) initAudio();
+    if (audio) {
+      audio.currentTime = 0;
+      audio.play();
+    }
+  }
+
+  function showFullscreenCat(cat: Element) {
+    if (activeFullscreenCat) {
+      activeFullscreenCat.remove();
+      activeFullscreenCat = null;
+      return;
+    }
+
+    const catElement = cat.cloneNode(true) as HTMLElement;
+    catElement.classList.add('fullscreen');
+    document.body.appendChild(catElement);
+    activeFullscreenCat = catElement;
+    playAudio();
+
+    catElement.addEventListener('click', () => {
+      catElement.remove();
+      activeFullscreenCat = null;
+    });
+  }
+
   function showRandomCat() {
+    if (activeFullscreenCat) return; // Don't show new cats while in fullscreen
+
     const cats = document.querySelectorAll('.corner-cat');
     const previousCat = document.querySelector('.corner-cat.show');
     
@@ -29,20 +70,16 @@ import { catAnimationConfig } from '../config/animations';
     const randomIndex = Math.floor(Math.random() * availableCats.length);
     const selectedCat = availableCats[randomIndex];
     
-    // Show and animate the cat
     selectedCat.classList.add('show');
     
-    // Add wiggle animation after a short delay
     setTimeout(() => {
       selectedCat.classList.add('wiggle');
     }, catAnimationConfig.timing.animationDuration);
 
-    // Remove wiggle and prepare for exit
     setTimeout(() => {
       selectedCat.classList.remove('wiggle');
       selectedCat.classList.add('exit');
       
-      // Remove all classes after exit animation
       setTimeout(() => {
         selectedCat.classList.remove('show', 'exit');
       }, catAnimationConfig.timing.animationDuration);
@@ -59,6 +96,15 @@ import { catAnimationConfig } from '../config/animations';
       scheduleNextCat();
     }, randomDelay);
   }
+
+  // Add click handlers to cats
+  document.querySelectorAll('.corner-cat').forEach(cat => {
+    cat.addEventListener('click', () => {
+      if (cat.classList.contains('show')) {
+        showFullscreenCat(cat);
+      }
+    });
+  });
 
   // Start the cat appearances
   scheduleNextCat();

@@ -21,5 +21,11 @@ export const catAnimationConfig = {
       scale: [1, 0],
       rotate: -15, // degrees
     }
+  },
+
+  // Audio configuration
+  audio: {
+    url: 'https://skvu.nl/merrycrisis.mp3',
+    volume: 0.5
   }
 };
